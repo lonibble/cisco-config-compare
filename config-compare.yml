@@ -1,0 +1,44 @@
+---
+- name: Backup Config Host 1
+  hosts: core1
+  gather_facts: false
+
+  tasks: 
+  - name: ios_config backup
+    ios_config:
+      backup: yes
+      backup_options:
+        filename: core1.cfg
+        dir_path: ~/ansible/backup
+
+- name: Backup Config Host 2
+  hosts: core2
+  gather_facts: false
+
+  tasks: 
+  - name: ios_config backup
+    ios_config:
+      backup: yes
+      backup_options:
+        filename: core2.cfg
+        dir_path: ~/ansible/backup
+
+- name: Use linux diff to compare
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+  - name: diff
+    command: diff core1.cfg core2.cfg
+    args:
+     chdir: "~/ansible/backup"
+    failed_when: "diff.rc > 1"
+    register: diff
+
+  - local_action: 
+      copy 
+      content={{ diff.stdout }} 
+      dest=~/ansible/backup/diff.log
+
+  - name: debug output
+    debug: msg="{{ diff.stdout }}"

@@ -1,0 +1,17 @@
+[all:vars]
+ansible_ssh_common_args=' -oKexAlgorithms=+diffie-hellman-group1-sha1 -caes128-cbc'
+
+[cisco:vars]
+ansible_user=admin
+ansible_ssh_pass=password
+ansible_network_os=ios
+ansible_connection=network_cli
+ansible_become=true
+ansible_become_method=enable
+
+[routers:children]
+cisco
+
+[cisco]
+core1 ansible_host=172.16.69.148
+core2 ansible_host=172.16.69.147
