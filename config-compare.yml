@@ -29,7 +29,7 @@
 
   tasks:
   - name: diff
-    command: diff core1.cfg core2.cfg
+    command: diff -c core1.cfg core2.cfg
     args:
      chdir: "~/ansible/backup"
     failed_when: "diff.rc > 1"
