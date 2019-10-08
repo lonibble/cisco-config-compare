@@ -35,10 +35,13 @@
     failed_when: "diff.rc > 1"
     register: diff
 
-  - local_action: 
-      copy 
-      content={{ diff.stdout }} 
-      dest=~/ansible/backup/diff.log
+  - name: Capture diff to file on localhost
+      copy: 
+        content: "{{ diff.stdout }}" 
+        dest: "~/ansible/backup/diff.log"
 
-  - name: debug output
-    debug: msg="{{ diff.stdout }}"
+  - name: Display diff to screen using -vv
+    debug: 
+     var: diff
+     verbosity: 2
+     # msg="{{ diff.stdout }}"
